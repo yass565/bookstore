@@ -50,6 +50,7 @@ class BookControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
     private List<Comment> comments;
+    ObjectMapperUtils objectMapper = new ObjectMapperUtils();
 
 
     @Test
@@ -60,7 +61,7 @@ class BookControllerTest {
         comments.add(new Comment(2, "Riche en contenu"));
         Book book = new Book(1, "Programmation en C", comments);
 
-        ObjectMapperUtils objectMapper = new ObjectMapperUtils();
+
         String inputJson = objectMapper.mapToJson(book);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -68,5 +69,18 @@ class BookControllerTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertThat(status).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void should_return_all_books() throws Exception {
+        String uri = "/books";
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertThat(status).isEqualTo(200);
+        String content = mvcResult.getResponse().getContentAsString();
+        Book[] books = objectMapper.mapFromJson(content, Book[].class);
+        assertThat(books.length > 0);
     }
 }
