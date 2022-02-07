@@ -18,7 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -56,6 +58,19 @@ public class BookServiceTest {
         // verify if the save method is called when createBook is called too
         verify(bookRepository, times(1)).save(any(Book.class));
 
+    }
+
+    @Test
+    public void should_get_all_books() {
+        List<Book> books = new ArrayList<>();
+        books.add(new Book(1, "Programmation en C", comments));
+        books.add(new Book(2, "Java", comments));
+        books.add(new Book(3, "Spring boot", comments));
+
+
+        given(bookRepository.findAll()).willReturn(books);
+        List<Book> expected=bookService.getAllBooks();
+        assertThat(expected).isEqualTo(books);
     }
 
 }
