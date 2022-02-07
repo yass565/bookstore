@@ -18,4 +18,14 @@ public class Book {
 
     @OneToMany
     private List<Comment> comments;
+
+    public Book(int uuid, String name, List<Comment> comments) {
+        this.uuid=uuid;
+        this.name=name;
+        this.comments = comments;
+    }
+
+    public Book() {
+
+    }
 }
