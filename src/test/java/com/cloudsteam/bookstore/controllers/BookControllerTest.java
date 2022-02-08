@@ -62,7 +62,7 @@ class BookControllerTest {
         Book[] books = objectMapper.mapFromJson(content, Book[].class);
         assertThat(books.length > 0);
     }
-
+/*
     @Test
     public void should_update_book() throws Exception {
         String uri = "/Books/1";
@@ -79,7 +79,7 @@ class BookControllerTest {
         int status = mvcResult.getResponse().getStatus();
         assertThat(status).isEqualTo(200);
     }
-
+*/
     @Test
     public void deleteBook() throws Exception {
         String uri = "/books/2";
