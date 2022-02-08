@@ -1,7 +1,6 @@
 package com.cloudsteam.bookstore.controllers;
 
 import com.cloudsteam.bookstore.entities.Book;
-import com.cloudsteam.bookstore.exceptions.BookNotFoundException;
 import com.cloudsteam.bookstore.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("books")
+@RequestMapping("/books")
 @RestController
 public class BookController {
 
@@ -39,8 +38,8 @@ public class BookController {
         bookService.deleteBook(bookId);
     }
 
-    @PutMapping(path = "/{bookId}")
-    public ResponseEntity<Book> updateBook(@PathVariable int bookId, @RequestBody(required = true) Book book) throws BookNotFoundException {
+    @PutMapping("/{bookId}")
+    public ResponseEntity<Book> updateBook(@PathVariable int bookId, @RequestBody(required = true) Book book){
         Book bookUpdated = bookService.updateBook(book);
         return new ResponseEntity<>(bookUpdated, HttpStatus.OK);
     }
