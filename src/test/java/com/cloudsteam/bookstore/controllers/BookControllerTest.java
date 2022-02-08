@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
@@ -62,10 +63,10 @@ class BookControllerTest {
         Book[] books = objectMapper.mapFromJson(content, Book[].class);
         assertThat(books.length > 0);
     }
-/*
+
     @Test
     public void should_update_book() throws Exception {
-        String uri = "/Books/1";
+        String uri = "/books/1";
         List<Comment> comments = new ArrayList<Comment>();
         comments.add(new Comment(1, "Livre très interessant"));
         comments.add(new Comment(2, "Riche en contenu"));
@@ -79,7 +80,7 @@ class BookControllerTest {
         int status = mvcResult.getResponse().getStatus();
         assertThat(status).isEqualTo(200);
     }
-*/
+
     @Test
     public void deleteBook() throws Exception {
         String uri = "/books/2";
