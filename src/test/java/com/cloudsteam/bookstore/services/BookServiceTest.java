@@ -2,6 +2,7 @@ package com.cloudsteam.bookstore.services;
 
 import com.cloudsteam.bookstore.entities.Book;
 import com.cloudsteam.bookstore.entities.Comment;
+import com.cloudsteam.bookstore.exceptions.BookNotFoundException;
 import com.cloudsteam.bookstore.repositories.BookRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,8 +22,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -52,13 +52,18 @@ public class BookServiceTest {
     @Test
     public void should_create_a_book() {
 
+        given(bookRepository.save(new Book(1, "Programmation en C", comments))).willAnswer(invocation ->invocation.getArgument(0));
 
-        bookService.createBook(new Book(1, "Programmation en C", comments));
+        Book savedBook = bookService.createBook(new Book(1, "Programmation en C", comments));
 
+
+        assertThat(savedBook).isNotNull();
         // verify if the save method is called when createBook is called too
         verify(bookRepository, times(1)).save(any(Book.class));
 
     }
+
+
 
     @Test
     public void should_get_all_books() {
@@ -71,6 +76,30 @@ public class BookServiceTest {
         given(bookRepository.findAll()).willReturn(books);
         List<Book> expected=bookService.getAllBooks();
         assertThat(expected).isEqualTo(books);
+    }
+
+    @Test
+    public void should_get_book_by_id() {
+        Book book = new Book(1, "Programmation en C", comments);
+        given(bookRepository.findById(book.getUuid())).willReturn(java.util.Optional.of(book));
+
+        Book returned = bookService.getBookById(book.getUuid());
+
+        verify(bookRepository, times(1)).findById(1);
+        verifyNoMoreInteractions(bookRepository);
+
+        assertThat(returned).isEqualTo(book);
+    }
+
+    @Test
+    public void should_update_book() throws BookNotFoundException {
+
+        Book updated = new Book(1, "Programmation en C", comments);
+        when(bookRepository.findById(updated.getUuid())).thenReturn(java.util.Optional.of(updated));
+        Book returned = bookService.updateBook(updated);
+
+        assertThat(returned).isEqualTo(book);
+        verify(bookRepository, times(1)).save(any(Book.class));
     }
 
 }
