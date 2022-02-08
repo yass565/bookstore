@@ -1,7 +1,6 @@
 package com.cloudsteam.bookstore.services;
 
 import com.cloudsteam.bookstore.entities.Book;
-import com.cloudsteam.bookstore.exceptions.BookNotFoundException;
 import com.cloudsteam.bookstore.repositories.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +41,8 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    public Book updateBook(Book book) throws BookNotFoundException {
-        if(!bookRepository.existsById(book.getUuid())){
-            LOGGER.debug("No book found with id: " + book.getUuid());
-            throw new BookNotFoundException("Book with id " +  book.getUuid() + " is not found");
-        }
+    public Book updateBook(Book book) {
+
         return bookRepository.save(book);
     }
 

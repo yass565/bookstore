@@ -2,10 +2,7 @@ package com.cloudsteam.bookstore.entities;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,10 @@ public class Book {
     private int uuid;
     private String name;
 
-    @OneToMany
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Comment> comments;
 
     public Book(int uuid, String name, List<Comment> comments) {
