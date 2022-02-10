@@ -2,7 +2,6 @@ package com.cloudsteam.bookstore.repositories;
 
 import com.cloudsteam.bookstore.entities.Book;
 import com.cloudsteam.bookstore.entities.Comment;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,13 +20,9 @@ public class BookRepositoryTest {
     @Autowired
     private BookRepository bookRepository;
 
-
-
-
-
     @Test
     public void should_save_a_book() {
-        List<Comment> comments = new ArrayList<Comment>();
+        List<Comment> comments = new ArrayList<>();
         comments.add(new Comment(1, "Livre très interessant"));
         comments.add(new Comment(2, "Riche en contenu"));
 
@@ -39,21 +34,21 @@ public class BookRepositoryTest {
 
     @Test
     public void should_find_all_books() {
-        List<Comment> commentsList1 = new ArrayList<Comment>();
-        commentsList1.add(new Comment(1, "Livre très interessant"));
+        List<Comment> commentsList1 = new ArrayList<>();
+        commentsList1.add(new Comment(1, "Livre très intéressant"));
         commentsList1.add(new Comment(2, "Riche en contenu"));
         Book book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
 
-        List<Comment> commentsList2 = new ArrayList<Comment>();
-        commentsList2.add(new Comment(3, "Livre très interessant"));
+        List<Comment> commentsList2 = new ArrayList<>();
+        commentsList2.add(new Comment(3, "Livre très intéressant"));
         commentsList2.add(new Comment(4, "Riche en contenu"));
 
         Book book2 = new Book(2, "Programmation en C", commentsList2);
         entityManager.persist(book2);
 
-        List<Comment> commentsList3 = new ArrayList<Comment>();
-        commentsList3.add(new Comment(5, "Livre très interessant"));
+        List<Comment> commentsList3 = new ArrayList<>();
+        commentsList3.add(new Comment(5, "Livre très intéressant"));
         commentsList3.add(new Comment(6, "Riche en contenu"));
 
         Book book3 = new Book(3, "Programmation en C", commentsList3);
@@ -65,15 +60,15 @@ public class BookRepositoryTest {
 
     @Test
     public void should_find_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<Comment>();
-        commentsList1.add(new Comment(1, "Livre très interessant"));
+        List<Comment> commentsList1 = new ArrayList<>();
+        commentsList1.add(new Comment(1, "Livre très intéressant"));
         commentsList1.add(new Comment(2, "Riche en contenu"));
 
         Book book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
 
-        List<Comment> commentsList2 = new ArrayList<Comment>();
-        commentsList2.add(new Comment(3, "Livre très interessant"));
+        List<Comment> commentsList2 = new ArrayList<>();
+        commentsList2.add(new Comment(3, "Livre très intéressant"));
         commentsList2.add(new Comment(4, "Riche en contenu"));
 
         Book book2 = new Book(2, "Programmation en C", commentsList2);
@@ -86,15 +81,15 @@ public class BookRepositoryTest {
 
     @Test
     public void should_update_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<Comment>();
-        commentsList1.add(new Comment(1, "Livre très interessant"));
+        List<Comment> commentsList1 = new ArrayList<>();
+        commentsList1.add(new Comment(1, "Livre très intéressant"));
         commentsList1.add(new Comment(2, "Riche en contenu"));
 
         Book book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
 
-        List<Comment> commentsList2 = new ArrayList<Comment>();
-        commentsList2.add(new Comment(3, "Livre très interessant"));
+        List<Comment> commentsList2 = new ArrayList<>();
+        commentsList2.add(new Comment(3, "Livre très intéressant"));
         commentsList2.add(new Comment(4, "Riche en contenu"));
 
         Book book2 = new Book(2, "Programmation en C", commentsList2);
@@ -113,8 +108,8 @@ public class BookRepositoryTest {
     }
     @Test
     public void should_delete_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<Comment>();
-        commentsList1.add(new Comment(1, "Livre très interessant"));
+        List<Comment> commentsList1 = new ArrayList<>();
+        commentsList1.add(new Comment(1, "Livre très intéressant"));
         commentsList1.add(new Comment(2, "Riche en contenu"));
 
         Book book1 = new Book(1, "Programmation en C", commentsList1);
@@ -122,7 +117,7 @@ public class BookRepositoryTest {
         entityManager.persist(book1);
         bookRepository.deleteById(book1.getUuid());
         Iterable<Book> books = bookRepository.findAll();
-        assertThat(books).hasSize(0);
+        assertThat(books).isEmpty();
     }
 
 

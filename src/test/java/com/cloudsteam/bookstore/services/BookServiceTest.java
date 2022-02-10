@@ -33,8 +33,8 @@ public class BookServiceTest {
     @BeforeEach
     void initData() {
 
-        comments = new ArrayList<Comment>();
-        comments.add(new Comment(1, "Livre très interessant"));
+        comments = new ArrayList<>();
+        comments.add(new Comment(1, "Livre très intéressant"));
         comments.add(new Comment(2, "Riche en contenu"));
 
         book=new Book(1, "Programmation en C", comments);

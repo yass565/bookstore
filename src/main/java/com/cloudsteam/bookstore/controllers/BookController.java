@@ -18,7 +18,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody(required = true) Book book) {
-        return new ResponseEntity<>(book, HttpStatus.CREATED);
+        return new ResponseEntity<>(bookService.createBook(book), HttpStatus.CREATED);
     }
 
     @GetMapping
