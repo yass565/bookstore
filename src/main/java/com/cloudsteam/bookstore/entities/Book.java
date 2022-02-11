@@ -1,13 +1,16 @@
 package com.cloudsteam.bookstore.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
     @Id
     private int uuid;
@@ -18,14 +21,4 @@ public class Book {
             orphanRemoval = true
     )
     private List<Comment> comments;
-
-    public Book(int uuid, String name, List<Comment> comments) {
-        this.uuid=uuid;
-        this.name=name;
-        this.comments = comments;
-    }
-
-    public Book() {
-
-    }
 }

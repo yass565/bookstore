@@ -15,11 +15,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+class BookServiceTest {
 
     @Mock
     BookRepository bookRepository;
@@ -27,30 +26,20 @@ public class BookServiceTest {
     @InjectMocks
     BookService bookService;
 
-    Book book;
-    List<Comment> comments;
-
-    @BeforeEach
-    void initData() {
-
-        comments = new ArrayList<>();
-        comments.add(new Comment(1, "Livre très intéressant"));
-        comments.add(new Comment(2, "Riche en contenu"));
-
-        book=new Book(1, "Programmation en C", comments);
-
-    }
 
     @Test
-    public void should_create_a_book() {
+    void should_create_a_book() {
 
-        given(bookRepository.save(new Book(1, "Programmation en C", comments))).willAnswer(invocation ->invocation.getArgument(0));
+        //Given
+        var comments = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book=new Book(1, "Programmation en C", comments);
+        //When
+        when(bookRepository.save(book)).thenReturn(book);
 
-        Book savedBook = bookService.createBook(new Book(1, "Programmation en C", comments));
+        var savedBook = bookService.create(new Book(1, "Programmation en C", comments));
 
-
+        //Then
         assertThat(savedBook).isNotNull();
-        // verify if the save method is called when createBook is called too
         verify(bookRepository, times(1)).save(any(Book.class));
 
     }
@@ -58,40 +47,64 @@ public class BookServiceTest {
 
 
     @Test
-    public void should_get_all_books() {
-        List<Book> books = new ArrayList<>();
-        books.add(new Book(1, "Programmation en C", comments));
-        books.add(new Book(2, "Java", comments));
-        books.add(new Book(3, "Spring boot", comments));
+    void should_get_all_books() {
+        //Given
+        var comments = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var books = List.of(new Book(1, "Programmation en C", comments), new Book(2, "Java", comments), new Book(3, "Spring boot", comments));
 
+        //When
+        when(bookRepository.findAll()).thenReturn(books);
+        var expected=bookService.getAll();
 
-        given(bookRepository.findAll()).willReturn(books);
-        List<Book> expected=bookService.getAllBooks();
+        //Then
         assertThat(expected).isEqualTo(books);
     }
 
     @Test
-    public void should_get_book_by_id() {
-        Book book = new Book(1, "Programmation en C", comments);
-        given(bookRepository.findById(book.getUuid())).willReturn(java.util.Optional.of(book));
+    void should_get_book_by_id() {
+        //Given
+        var comments = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book = new Book(1, "Programmation en C", comments);
 
-        Book returned = bookService.getBookById(book.getUuid());
+        //When
+        when(bookRepository.findById(book.getUuid())).thenReturn(java.util.Optional.of(book));
+        var returned = bookService.findById(book.getUuid());
 
+        //Then
         verify(bookRepository, times(1)).findById(1);
         verifyNoMoreInteractions(bookRepository);
-
         assertThat(returned).isEqualTo(book);
     }
 
     @Test
-    public void should_update_book(){
+    void should_update_book(){
 
-        Book updated = new Book(1, "Programmation en C", comments);
+        //Given
+        var comments = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var updated = new Book(1, "Programmation en C", comments);
+
+        //When
         when(bookRepository.save(updated)).thenReturn(updated);
-        Book returned = bookService.updateBook(updated);
+        var returned = bookService.update(updated);
 
-        assertThat(returned).isEqualTo(book);
+        //Then
+        assertThat(returned).isEqualTo(updated);
         verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    void should_delete_book(){
+
+        //Given
+        var comments = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book = new Book(1, "Programmation en C", comments);
+
+        //When
+        bookService.delete(book.getUuid());
+        var books=bookRepository.findAll();
+
+        //Then
+        assertThat(books).isEmpty();
     }
 
 }

@@ -2,9 +2,6 @@ package com.cloudsteam.bookstore.controllers;
 
 import com.cloudsteam.bookstore.entities.Book;
 import com.cloudsteam.bookstore.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,34 +10,36 @@ import java.util.List;
 @RestController
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody(required = true) Book book) {
-        return new ResponseEntity<>(bookService.createBook(book), HttpStatus.CREATED);
+    public Book create(@RequestBody() Book book) {
+        return bookService.create(book);
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<Book> getAll() {
+        return bookService.getAll();
     }
 
-    @GetMapping("/{bookId}")
-    private Book getBook(@PathVariable("bookId") int bookId)
+    @GetMapping("/{id}")
+    public Book getBook(@PathVariable("id") int bookId)
     {
-        return bookService.getBookById(bookId);
+        return bookService.findById(bookId);
     }
 
-    @DeleteMapping("/{bookId}")
-    private void deleteBook(@PathVariable("bookId") int bookId)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") int bookId)
     {
-        bookService.deleteBook(bookId);
+        bookService.delete(bookId);
     }
 
-    @PutMapping("/{bookId}")
-    public ResponseEntity<Book> updateBook(@PathVariable int bookId, @RequestBody(required = true) Book book){
-        Book bookUpdated = bookService.updateBook(book);
-        return new ResponseEntity<>(bookUpdated, HttpStatus.OK);
+    @PutMapping("/{id}")
+    public Book update(@PathVariable int id, @RequestBody() Book book){
+        return bookService.update(book);
     }
 }
