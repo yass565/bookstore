@@ -2,48 +2,39 @@ package com.cloudsteam.bookstore.services;
 
 import com.cloudsteam.bookstore.entities.Book;
 import com.cloudsteam.bookstore.repositories.BookRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BookService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookService.class);
 
-    @Autowired
+
     BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    public Book createBook(Book book) {
+    public Book create(Book book) {
         return bookRepository.save(book);
     }
 
-    public List<Book> getAllBooks() {
-        List<Book> books = new ArrayList<Book>();
-        bookRepository.findAll().forEach(books1 -> books.add(books1));
-        return books;
+    public List<Book> getAll() {
+        return bookRepository.findAll();
     }
 
-    public Book getBookById(int id)
+    public Book findById(int id)
     {
         return bookRepository.findById(id).get();
     }
 
-    public void deleteBook(int id)
+    public void delete(int id)
     {
         bookRepository.deleteById(id);
     }
 
-    public Book updateBook(Book book) {
-
-        return bookRepository.save(book);
-    }
+    public Book update(Book book) { return bookRepository.save(book); }
 
 }

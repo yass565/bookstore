@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class BookRepositoryTest {
+class BookRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
@@ -21,102 +20,91 @@ public class BookRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    public void should_save_a_book() {
-        List<Comment> comments = new ArrayList<>();
-        comments.add(new Comment(1, "Livre très interessant"));
-        comments.add(new Comment(2, "Riche en contenu"));
+    void should_save_a_book() {
 
-        Book book = bookRepository.save(new Book(1, "Programmation en C", comments));
-        Book expected=new Book(1, "Programmation en C", comments);
+        //Given
+        List<Comment> comments = List.of(new Comment(1, "Livre très interessant"), new Comment(2, "Riche en contenu"));
 
+        //When
+        var book = bookRepository.save(new Book(1, "Programmation en C", comments));
+        var expected=new Book(1, "Programmation en C", comments);
+
+        //Then
         assertThat(book).isEqualTo(expected);
     }
 
     @Test
-    public void should_find_all_books() {
-        List<Comment> commentsList1 = new ArrayList<>();
-        commentsList1.add(new Comment(1, "Livre très intéressant"));
-        commentsList1.add(new Comment(2, "Riche en contenu"));
-        Book book1 = new Book(1, "Programmation en C", commentsList1);
+    void should_find_all_books() {
+
+        //Given
+        var commentsList1 = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
 
-        List<Comment> commentsList2 = new ArrayList<>();
-        commentsList2.add(new Comment(3, "Livre très intéressant"));
-        commentsList2.add(new Comment(4, "Riche en contenu"));
-
-        Book book2 = new Book(2, "Programmation en C", commentsList2);
+        var commentsList2 = List.of(new Comment(3, "Livre très intéressant"), new Comment(4, "Riche en contenu"));
+        var book2 = new Book(2, "Programmation en C", commentsList2);
         entityManager.persist(book2);
 
-        List<Comment> commentsList3 = new ArrayList<>();
-        commentsList3.add(new Comment(5, "Livre très intéressant"));
-        commentsList3.add(new Comment(6, "Riche en contenu"));
-
-        Book book3 = new Book(3, "Programmation en C", commentsList3);
+        var commentsList3 = List.of(new Comment(5, "Livre très intéressant"), new Comment(6, "Riche en contenu"));
+        var book3 = new Book(3, "Programmation en C", commentsList3);
         entityManager.persist(book3);
 
-        Iterable<Book> books = bookRepository.findAll();
+        //When
+        var books = bookRepository.findAll();
+
+        //Then
         assertThat(books).hasSize(3).contains(book1, book2, book3);
     }
 
     @Test
     public void should_find_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<>();
-        commentsList1.add(new Comment(1, "Livre très intéressant"));
-        commentsList1.add(new Comment(2, "Riche en contenu"));
-
-        Book book1 = new Book(1, "Programmation en C", commentsList1);
+        //Given
+        var commentsList1 = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
 
-        List<Comment> commentsList2 = new ArrayList<>();
-        commentsList2.add(new Comment(3, "Livre très intéressant"));
-        commentsList2.add(new Comment(4, "Riche en contenu"));
+        var commentsList2 = List.of(new Comment(3, "Livre très intéressant"), new Comment(4, "Riche en contenu"));
 
-        Book book2 = new Book(2, "Programmation en C", commentsList2);
+        var book2 = new Book(2, "Programmation en C", commentsList2);
         entityManager.persist(book2);
 
-        Book foundBook = bookRepository.findById(book2.getUuid()).get();
+        //When
+        var foundBook = bookRepository.findById(book2.getUuid()).get();
+
+        //Then
         assertThat(foundBook).isEqualTo(book2);
     }
 
 
     @Test
-    public void should_update_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<>();
-        commentsList1.add(new Comment(1, "Livre très intéressant"));
-        commentsList1.add(new Comment(2, "Riche en contenu"));
+    void should_update_book_by_id() {
 
-        Book book1 = new Book(1, "Programmation en C", commentsList1);
-        entityManager.persist(book1);
+        //Given
+        var comments = List.of(new Comment(1, "Livre très interessant"), new Comment(2, "Riche en contenu"));
+        var book = new Book(1, "Programmation en C", comments);
 
-        List<Comment> commentsList2 = new ArrayList<>();
-        commentsList2.add(new Comment(3, "Livre très intéressant"));
-        commentsList2.add(new Comment(4, "Riche en contenu"));
-
-        Book book2 = new Book(2, "Programmation en C", commentsList2);
-        entityManager.persist(book2);
-
-        Book updatedBook = new Book(2, "Programmation en Java", commentsList2);
-        Book book = bookRepository.findById(book2.getUuid()).get();
-        book.setName(updatedBook.getName());
-        book.setComments(updatedBook.getComments());
+        //When
+        book.setName("Programmation en Java");
         bookRepository.save(book);
-        Book checkBook = bookRepository.findById(book2.getUuid()).get();
+        var actual = bookRepository.findById(book.getUuid()).get();
 
-        assertThat(checkBook.getUuid()).isEqualTo(book2.getUuid());
-        assertThat(checkBook.getName()).isEqualTo(updatedBook.getName());
-        assertThat(checkBook.getComments()).isEqualTo(updatedBook.getComments());
+        //Then
+        assertThat(actual).isEqualTo(book);
     }
-    @Test
-    public void should_delete_book_by_id() {
-        List<Comment> commentsList1 = new ArrayList<>();
-        commentsList1.add(new Comment(1, "Livre très intéressant"));
-        commentsList1.add(new Comment(2, "Riche en contenu"));
 
-        Book book1 = new Book(1, "Programmation en C", commentsList1);
+    @Test
+    void should_delete_book_by_id() {
+
+        //Given
+        var commentsList1 = List.of(new Comment(1, "Livre très intéressant"), new Comment(2, "Riche en contenu"));
+        var book1 = new Book(1, "Programmation en C", commentsList1);
         entityManager.persist(book1);
-        entityManager.persist(book1);
+
+        //When
         bookRepository.deleteById(book1.getUuid());
-        Iterable<Book> books = bookRepository.findAll();
+        var books = bookRepository.findAll();
+
+        //Then
         assertThat(books).isEmpty();
     }
 
